@@ -1,0 +1,3 @@
+sudo apt-get update
+sudo apt-get -y upgrade
+sudo -E apt-get -qq install neofetch cpio bc build-essential zip curl libstdc++6 git wget gcc clang libssl-dev rsync flex curl bison aria2 python3

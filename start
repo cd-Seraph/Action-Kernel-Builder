@@ -1,0 +1,75 @@
+#!/bin/sh
+
+set -e -x
+
+# builtin bash timer
+SECONDS=0 
+
+# Work Path
+WORK="${HOME}/work"
+
+# Kernel Folder Name - Don't change
+KERNEL="myKernel"
+
+# Kernel Source Path
+KERNEL_SRC="${WORK}/${KERNEL}"
+
+# Kernel Source - Recommend to replace the URL by your target Kernel Source and Branch (even if its main or master, put it).
+KERNEL_SOURCE_URL="${{ github.event.inputs.KERNEL_SOURCE }}"
+KERNEL_BRANCH="${{ github.event.inputs.KERNEL_BRANCH }}"
+
+# Clang URL - Change the version, depends on your kernel source.
+CLANG_TAR_URL="${{ github.event.inputs.CLANG_TAR_URL }}"
+
+# Others - Change this to your preference.
+ANYKERNEL_GIT="${{ github.event.inputs.ANYKERNEL_GIT }}"
+ZIPNAME="${{ github.event.inputs.ZIPNAME }}"
+
+# Prepare Directory
+mkdir -p "${WORK}"
+cd "${WORK}" || exit 1
+
+# Cloning all the Necessary files
+if [ ! -d clang ]; then mkdir clang && curl -Lsq "${CLANG_TAR_URL}" -o clang.tgz && tar -xzf clang.tgz -C clang; fi
+[ ! -d myKernel ] && git clone --depth=1 "${KERNEL_SOURCE_URL}" -b ${KERNEL_BRANCH} ${KERNEL}
+
+# Setting Toolchain Path
+PATH="${WORK}/clang/bin:/bin"
+
+# Preparing Build Process
+cd "${KERNEL_SRC}" || exit 1
+
+# Android Cross-Compile Make_Function
+make_fun() {
+	make O=out ARCH=arm64 \
+		CC=clang HOSTCC=clang \
+		CLANG_TRIPLE=aarch64-linux-gnu- \
+		CROSS_COMPILE=aarch64-linux-android- \
+		CROSS_COMPILE_ARM32=arm-linux-androideabi- "$@" 
+}
+
+# Prepare _defconfig - Change it base on your choice in arm/../configs/
+make_fun ${{ github.event.inputs.DEFCONFIG }}
+
+# Start Compiling Kernel
+make_fun -j$(nproc --all) || make_fun -j$(nproc --all)
+
+kernel="out/arch/arm64/boot/${{ github.event.inputs.KERNEL_TYPE }}"
+dtb="out/arch/arm64/boot/dts/vendor/oplus_7325/yupik.dtb"
+dtbo="out/arch/arm64/boot/dts/vendor/oplus_7325/yupik-21643-overlay.dtbo"
+
+if [ -f "$kernel" ] && [ -f "$dtb" ] && [ -f "$dtbo" ]; then
+	echo -e "\nKernel compiled succesfully! Zipping up...\n"
+	git clone --depth=1 "${{ github.event.inputs.ANYKERNEL_GIT }}" AnyKernel3
+	cp $kernel AnyKernel3
+    cp $dtb AnyKernel3/dtb
+    python2 scripts/dtc/libfdt/mkdtboimg.py create AnyKernel3/dtbo.img --page_size=4096 $dtbo
+    cd AnyKernel3
+    zip -r9 "../${{ github.event.inputs.ZIPNAME }}" * -x .git README.md *placeholder
+    cd ..
+    echo -e "\nCompleted in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) !"
+    echo "Zip: ${{ github.event.inputs.ZIPNAME }}"
+else
+	echo -e "\nCompilation failed!"
+	exit 1
+fi

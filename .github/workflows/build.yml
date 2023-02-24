@@ -6,40 +6,11 @@ on:
             DEVICE_NAME:
                 description: 'Your Device Codename'
                 required: true
-                default: 'ICE'
+                default: 'ice'
             ANDROID_VERSION:
                 description: 'Your Android Version'
                 required: true
-                default: 'Android 13'
-            KERNEL_SOURCE:
-                description: 'Android Kernel Source'
-                required: true
-                default: 'https://github.com/cd-Seraph/kernel_realme_ice'
-            KERNEL_BRANCH:
-                description: 'Android Kernel Branch'
-                required: true
-                default: 'RMX3461'
-            KERNEL_TYPE:
-                description: 'Image, Image-dtb, Image.gz-dtb'
-                required: true
-                default: 'Image'
-            DEFCONFIG:
-                description: 'Prepare _defconfig - Change it base on your choice in arm/../configs/'
-                required: true
-                default: 'vendor/lahaina-qgki_defconfig'
-            CLANG_TAR_URL:
-                description: 'Clang URL - Change the version, depends on your kernel source.'
-                required: true
-                default: 'https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android13-release/clang-r450784d.tar.gz'
-            ANYKERNEL_GIT:
-                description: 'AnyKernel3 Repo. Change depends on your preference.'
-                required: true
-                default: 'https://github.com/cd-Seraph/AnyKernel3.git'
-            ZIPNAME:
-                description: 'Final Kernel Zip name'
-                required: true
-                default: 'Kernel-Ice-by-Seraph.zip'
-               
+                default: 't-oss'
 permissions:
    contents: write
 

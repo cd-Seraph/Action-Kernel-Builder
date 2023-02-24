@@ -39,6 +39,9 @@ PATH="${WORK}/clang/bin:/bin"
 # Preparing Build Process
 cd "${KERNEL_SRC}" || exit 1
 
+# Integrating KernelSU
+curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+
 # Android Cross-Compile Make_Function
 make_fun() {
 	make O=out ARCH=arm64 \

@@ -89,6 +89,7 @@ jobs:
             name: Custom Kernel - Build ${{ steps.props.outputs.date }}
             draft: false
             prerelease: false
+            allowUpdates: true
             #tag: ${{ github.run_id }}-${{ steps.props.outputs.date }}
             #token: ${{ secrets.GITHUB_TOKEN }}
             body: |

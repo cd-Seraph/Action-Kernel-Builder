@@ -89,8 +89,8 @@ jobs:
             name: Custom Kernel - Build ${{ steps.props.outputs.date }}
             draft: false
             prerelease: false
-            tag: ${{ github.run_id }}-${{ steps.props.outputs.date }}
-            token: ${{ secrets.GITHUB_TOKEN }}
+            #tag: ${{ github.run_id }}-${{ steps.props.outputs.date }}
+            #token: ${{ secrets.GITHUB_TOKEN }}
             body: |
                 ## Custom Kernel via Github Actions for ${{ github.event.inputs.DEVICE_NAME }}-${{ github.event.inputs.ANDROID_VERSION }}
                 - Notes:

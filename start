@@ -47,7 +47,7 @@ make_fun() {
 	make O=out ARCH=arm64 \
 		CC=clang HOSTCC=clang \
 		CLANG_TRIPLE=aarch64-linux-gnu- \
-		CROSS_COMPILE=aarch64-linux-android- 
+		CROSS_COMPILE=aarch64-linux-android- "$@"
 }
 
 # Prepare _defconfig - Change it base on your choice in arm/../configs/

@@ -43,18 +43,22 @@ cd "${KERNEL_SRC}" || exit 1
 curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
 
 # Android Cross-Compile Make_Function
-make_fun() {
-	make O=out ARCH=arm64 \
-		CC=clang HOSTCC=clang \
-		CLANG_TRIPLE=aarch64-linux-gnu- \
-		CROSS_COMPILE=aarch64-linux-android- "$@"
-}
+MAKE_PARAMS="O=out ARCH=arm64 CC=clang CROSS_COMPILE=$WORK/clang/bin/llvm- LLVM=1 LLVM_IAS=1 \
+	CLANG_TRIPLE=aarch64-linux-gnu-"
+DEFCONFIG="vendor/lahaina-qgki_defconfig"
 
 # Prepare _defconfig - Change it base on your choice in arm/../configs/
-make_fun vendor/lahaina-qgki_defconfig
+make $MAKE_PARAMS $DEFCONFIG savedefconfig
+	cp out/defconfig arch/arm64/configs/$DEFCONFIG
+	echo -e "\nSuccessfully regenerated defconfig at $DEFCONFIG"
+	exit
 
 # Start Compiling Kernel
-make_fun -j$(nproc --all) || make_fun -j$(nproc --all)
+make $MAKE_PARAMS $DEFCONFIG
+
+echo -e "\nStarting compilation...\n"
+make -j$(nproc --all) $MAKE_PARAMS || exit $?
+make -j$(nproc --all) $MAKE_PARAMS INSTALL_MOD_PATH=modules INSTALL_MOD_STRIP=1 modules_install
 
 kernel="out/arch/arm64/boot/${{ github.event.inputs.KERNEL_TYPE }}"
 dtb="out/arch/arm64/boot/dts/vendor/oplus_7325/yupik.dtb"

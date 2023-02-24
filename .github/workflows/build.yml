@@ -1,0 +1,106 @@
+name: Kernel Builder
+
+on:
+    workflow_dispatch:
+        inputs:
+            DEVICE_NAME:
+                description: 'Your Device Codename'
+                required: true
+                default: 'ICE'
+            ANDROID_VERSION:
+                description: 'Your Android Version'
+                required: true
+                default: 'Android 13'
+            KERNEL_SOURCE:
+                description: 'Android Kernel Source'
+                required: true
+                default: 'https://github.com/cd-Seraph/kernel_realme_ice'
+            KERNEL_BRANCH:
+                description: 'Android Kernel Branch'
+                required: true
+                default: 'RMX3461'
+            KERNEL_TYPE:
+                description: 'Image, Image-dtb, Image.gz-dtb'
+                required: true
+                default: 'Image'
+            DEFCONFIG:
+                description: 'Prepare _defconfig - Change it base on your choice in arm/../configs/'
+                required: true
+                default: 'vendor/lahaina-qgki_defconfig'
+            CLANG_TAR_URL:
+                description: 'Clang URL - Change the version, depends on your kernel source.'
+                required: true
+                default: 'https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android13-release/clang-r450784d.tar.gz'
+            ANYKERNEL_GIT:
+                description: 'AnyKernel3 Repo. Change depends on your preference.'
+                required: true
+                default: 'https://github.com/cd-Seraph/AnyKernel3.git'
+            ZIPNAME:
+                description: 'Final Kernel Zip name'
+                required: true
+                default: 'Kernel-Ice-by-Seraph.zip'
+               
+permissions:
+   contents: write
+
+jobs:
+    build:
+        if: github.event.repository.owner.id == github.event.sender.id
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+        - name: Display Run Parameters
+          run: |
+            SECONDS=0 # builtin bash timer
+            echo "::group::User Environment Variables"
+            echo "Kernel Source: ${{ github.event.inputs.KERNEL_SOURCE }}"
+            echo "Kernel Branch: ${{ github.event.inputs.KERNEL_BRANCH }}"
+            echo "Kernel Type: ${{ github.event.inputs.KERNEL_TYPE }}"
+            echo "DEFCONFIG: ${{ github.event.inputs.DEFCONFIG }}"
+            echo "Clang Tar URL: ${{ github.event.inputs.CLANG_TAR_URL }}"
+            echo "AnyKernel3 Repo: ${{ github.event.inputs.ANYKERNEL_GIT }}"
+            echo "Zipname: ${{ github.event.inputs.ZIPNAME }}"
+        
+        # You might want to Checkout your repo first, but not mandatory
+        - name: Check Out
+          uses: actions/checkout@v3
+          
+        # Cleanup The Actions Workspace Using Custom Composite Run Actions
+        #- name: Cleanup
+        #  uses: rokibhasansagar/slimhub_actions@main
+          # That's it! Now use your normal steps
+          
+        - name: Setup the environment
+          run: |
+            chmod +x envsetup
+            ./envsetup
+
+        - name: Start Building Kernel
+          run: |
+            chmod +x start
+            ./start
+            
+        - name: Upload to Release
+          uses: ncipollo/release-action@v1.11.1
+          with:
+            artifacts: |
+                /home/runner/work/myKernel/*.zip
+            name: Custom Kernel - Build ${{ steps.props.outputs.date }}
+            draft: false
+            prerelease: false
+            tag: ${{ github.run_id }}-${{ steps.props.outputs.date }}
+            token: ${{ secrets.GITHUB_TOKEN }}
+            body: |
+                ## Custom Kernel via Github Actions for ${{ github.event.inputs.DEVICE_NAME }}-${{ github.event.inputs.ANDROID_VERSION }}
+                - Notes:
+                  - Uploaded recovery flashable android kernel.
+                  - Read my instruction below first.
+                - Flash:
+                  - Download compiled kernel zip, save it on your device or computer.
+                  - Flash it via adb sideload, twrp, or magisk.
+                  
+        - name: Link of Release
+          run: |
+            echo "Enjoy your Newly Built Kernel"
+            echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${{ github.run_id }}-${{ steps.props.outputs.date }}"

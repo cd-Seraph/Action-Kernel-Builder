@@ -75,7 +75,7 @@ dtbo="out/arch/arm64/boot/dts/vendor/oplus_7325/yupik-21643-overlay.dtbo"
 if [ -f "$kernel" ] && [ -f "$dtb" ] && [ -f "$dtbo" ]; then
 	echo -e "\nKernel compiled succesfully! Zipping up...\n"
 
-        git clone &ANYKERNEL_GIT AnyKernel3
+        git clone $ANYKERNEL_GIT AnyKernel3
 	
 	cp $kernel AnyKernel3
 	cp $dtb AnyKernel3/dtb

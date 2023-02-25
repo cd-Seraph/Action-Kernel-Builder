@@ -13,8 +13,8 @@ KERNEL="myKernel"
 KERNEL_SRC="${WORK}/${KERNEL}"
 
 # Kernel Source - Recommend to replace the URL by your target Kernel Source and Branch (even if its main or master, put it).
-KERNEL_SOURCE_URL="https://github.com/Cykeek-Labs/android_kernel_sm8350"
-KERNEL_BRANCH="13"
+KERNEL_SOURCE_URL="https://github.com/cd-Seraph/kernel_realme_ice"
+KERNEL_BRANCH="RMX3461"
 
 # Clang URL - Change the version, depends on your kernel source.
 CLANG_TAR_URL="https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android13-release/clang-r450784d.tar.gz"

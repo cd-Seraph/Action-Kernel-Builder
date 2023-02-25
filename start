@@ -26,10 +26,9 @@ ZIPNAME="Kernel-Stock-by-Seraph.zip"
 TC_DIR="${WORK}/clang"
 AK3_DIR="$KERNEL_SRC/AnyKernel3"
 DEFCONFIG="vendor/lahaina-qgki_defconfig"
-MAKE_PARAMS="O=out ARCH=arm64 \
-		CC=clang HOSTCC=clang \
+MAKE_PARAMS="O=out ARCH=arm64 CC=clang HOSTCC=clang \
 		CLANG_TRIPLE=aarch64-linux-gnu- \
-		CROSS_COMPILE=aarch64-linux-android-"
+		CROSS_COMPILE=llvm-"
 
 
 # Prepare Directory

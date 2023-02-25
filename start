@@ -21,7 +21,7 @@ CLANG_TAR_URL="https://android.googlesource.com/platform/prebuilts/clang/host/li
 
 # Others - Change this to your preference.
 ANYKERNEL_GIT="https://github.com/cd-Seraph/AnyKernel3.git"
-ZIPNAME="Kernel-ICE-by-Seraph.zip"
+ZIPNAME="Kernel-Stock-by-Seraph.zip"
 
 TC_DIR="${WORK}/clang"
 AK3_DIR="$KERNEL_SRC/AnyKernel3"

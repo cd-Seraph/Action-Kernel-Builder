@@ -44,12 +44,10 @@ jobs:
           
         - name: Setup the environment
           run: |
-            chmod +x envsetup
             ./envsetup
 
         - name: Start Building Kernel
           run: |
-            chmod +x start
             ./start
             
         - name: Upload to Release

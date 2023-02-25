@@ -46,7 +46,7 @@ SECONDS=0 # builtin bash timer
 cd "${KERNEL_SRC}" || exit 1
 
 # Integrating KernelSU
-curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+# curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
 
 
 if [[ $1 = "-r" || $1 = "--regen" ]]; then

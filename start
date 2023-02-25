@@ -27,8 +27,8 @@ TC_DIR="${WORK}/clang"
 AK3_DIR="$KERNEL_SRC/AnyKernel3"
 DEFCONFIG="vendor/lahaina-qgki_defconfig"
 MAKE_PARAMS="O=out ARCH=arm64 CC=clang HOSTCC=clang \
-		CLANG_TRIPLE=aarch64-linux-gnu- \
-		CROSS_COMPILE=llvm-"
+		CROSS_COMPILE=llvm- LLVM=1 LLVM_IAS=1 \
+		CLANG_TRIPLE=aarch64-linux-gnu-"
 
 
 # Prepare Directory

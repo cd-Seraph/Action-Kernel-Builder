@@ -13,15 +13,15 @@ KERNEL="myKernel"
 KERNEL_SRC="${WORK}/${KERNEL}"
 
 # Kernel Source - Recommend to replace the URL by your target Kernel Source and Branch (even if its main or master, put it).
-KERNEL_SOURCE_URL="https://github.com/cd-Seraph/stock_kernel_ice"
-KERNEL_BRANCH="master"
+KERNEL_SOURCE_URL="https://github.com/cd-Seraph/kernel_realme_ice"
+KERNEL_BRANCH="main"
 
 # Clang URL - Change the version, depends on your kernel source.
 CLANG_TAR_URL="https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android12L-release/clang-r383902.tar.gz"
 
 # Others - Change this to your preference.
 ANYKERNEL_GIT="https://github.com/cd-Seraph/AnyKernel3.git"
-ZIPNAME="Kernel-Stock-by-Seraph.zip"
+ZIPNAME="Ice-Kernel-by-Seraph.zip"
 
 TC_DIR="${WORK}/clang"
 AK3_DIR="$KERNEL_SRC/AnyKernel3"

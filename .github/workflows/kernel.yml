@@ -1,0 +1,77 @@
+name: Build Kernel
+
+on:
+  watch:
+    types: [started]
+    
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Kernel by ${{ github.actor }}
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Build Environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install git ccache automake flex lzop bison gperf build-essential zip curl zlib1g-dev g++-multilib libxml2-utils bzip2 libbz2-dev libbz2-1.0 libghc-bzlib-dev squashfs-tools pngcrush schedtool dpkg-dev liblz4-tool make optipng maven libssl-dev pwgen libswitch-perl policycoreutils minicom libxml-sax-base-perl libxml-simple-perl bc libc6-dev-i386 lib32ncurses5-dev libx11-dev lib32z-dev libgl1-mesa-dev xsltproc unzip device-tree-compiler python2 python3
+
+    - name: Compile Kernel
+      run: |
+        ./build
+
+    - name: Set Properties
+      id: props
+      run: |
+        echo "date=$(TZ=Asia/Manila date +%Y%m%d-%I%M%p)" >> $GITHUB_OUTPUT
+        echo "KERNEL_SOURCE=$(cat build | grep -w "KERNEL_SOURCE" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
+        echo "KERNEL_BRANCH=$(cat build | grep -w "KERNEL_BRANCH" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
+        echo "KERNEL_DEFCONFIG=$(cat build | grep -w "KERNEL_DEFCONFIG" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
+        echo "KERNEL=$(cat build | grep -w "KERNEL" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
+        echo "CLANG_URL=$(cat build | grep -w "CLANG_URL" | head -n 1 | cut -d "=" -f 2)" >> $GITHUB_ENV
+
+    - name: Check Out Directory
+      run: |
+       cd ~/work
+       if [ -f android-kernel/out/arch/arm64/boot/Image.gz ]; then
+           echo "CHECK_FILE_IS_OK=true" >> $GITHUB_ENV
+       else
+           echo "Kernel output file is empty"
+           exit 1
+       fi
+       if [ -f android-kernel/out/arch/arm64/boot/Image ]; then
+           echo "CHECK_FILE_IS_OK=true" >> $GITHUB_ENV
+       else
+           echo "Kernel output file is empty"
+           exit 1
+       fi
+
+    - name: Release
+      if: env.CHECK_FILE_IS_OK == 'true'
+      uses: ncipollo/release-action@v1.12.0
+      with:
+        artifacts: |
+          /home/runner/work/${{ env.KERNEL }}/out/arch/arm64/boot/Image*
+          /home/runner/work/${{ env.KERNEL }}/build.log
+        name: Compiled Kernel // ${{ steps.props.outputs.date }}
+        draft: false
+        prerelease: false
+        tag: ${{ github.run_id }}-${{ steps.props.outputs.date }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        body: |
+          KERNEL: ${{ env.KERNEL_SOURCE }}
+          BRANCH: ${{ env.KERNEL_BRANCH }}
+          DEFCONFIG: ${{ env.KERNEL_DEFCONFIG }}
+          COMPILER: ${{ env.CLANG_URL }}
+
+    - name: Link of Release
+      run: |
+        echo "Enjoy your Newly Built Kernel"
+        echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${{ github.run_id }}-${{ steps.props.outputs.date }}"

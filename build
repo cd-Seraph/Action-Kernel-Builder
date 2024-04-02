@@ -3,8 +3,8 @@
 set -e -x
 
 # Kernel Source
-KERNEL_SOURCE=https://github.com/cd-Seraph/kernel_oplus_ice
-KERNEL_BRANCH=ice
+KERNEL_SOURCE=https://github.com/cd-Seraph/kernel_realme_ice
+KERNEL_BRANCH=main
 KERNEL_DEFCONFIG=vendor/ice_defconfig
 
 # Prebuilt Clang Toolchain (AOSP)

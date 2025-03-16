@@ -8,12 +8,12 @@ KERNEL_BRANCH=ice-ksu
 KERNEL_DEFCONFIG=vendor/lahaina-qgki_defconfig
 
 # Prebuilt Clang Toolchain (AOSP)
-CLANG_URL=https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android14-release/clang-r487747c.tar.gz
+CLANG_URL=https://android.googlesource.com/platform//prebuilts/clang/host/linux-x86/+archive/4c6fbc28d3b078a5308894fc175f962bb26a5718/clang-r383902b1.tar.gz
 
 # Prebuilt GCC Utilities (AOSP)
 GCC_x64=https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9
 GCC_x32=https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9
-GCC_BRANCH=android12L-release
+GCC_BRANCH=master-kernel-build-2021
 
 # Setup make Command
 make_fun() {

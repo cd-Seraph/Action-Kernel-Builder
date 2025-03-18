@@ -53,6 +53,9 @@ cd "${KERNEL_SRC}" || exit 1
 export KBUILD_BUILD_HOST="${KERNEL}"
 export KBUILD_BUILD_USER="cd-Seraph"
 
+# Install KernelSu-Next
+curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -
+
 # Start Compiling Kernel
 make_fun "${KERNEL_DEFCONFIG}"
 make_fun -j"$(nproc --all)" 2>&1 | tee build.log || exit 1
